@@ -14,17 +14,20 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    font-family: HolidayExtrasSans,"Helvetica Neue",Helvetica,Arial,sans-serif;
-    padding: 2rem;
+    padding: 1rem 2rem;
     font-size: clamp(1rem, 2vw, 1.5rem);
 }
 
 .header {
-    font-size: 2em;
+    font-size: 2.5em;
     color: #542e91;
 }
 
 .content {
     font-size: 0.75em;
     color: #232323;
+}
+
+.input {
+    width: 40vw;
 }
