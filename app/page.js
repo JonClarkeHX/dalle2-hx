@@ -28,7 +28,6 @@ export default function Page() {
   async function handleSubmit(e) {
     e.preventDefault()
     update(prompt, router.refresh)
-
   }
 
   function handleReset(e) {

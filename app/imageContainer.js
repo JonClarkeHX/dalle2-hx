@@ -17,6 +17,7 @@ export default function ImageContainer({ header, content, url }) {
             src={url}
             alt='AI generated image'
             fill={true}
+            sizes={'100%'}
             placeholder='blur'
             blurDataURL='/sean-oulashin-KMn4VEeEPR8-unsplash.jpg'
             style={{objectFit: "contain"}}
