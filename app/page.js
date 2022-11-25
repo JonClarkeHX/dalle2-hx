@@ -3,7 +3,9 @@
 import { useState } from "react"
 import { useRouter } from 'next/navigation'
 import ImageContainer from "./imageContainer"
+import ImageUpload from "./imageUpload"
 import styles from './styles.module.css';
+import local from "@next/font/local"
 
 export default function Page() {
   const [header, setHeader] = useState("Secure parking that's very close to the airport.")
@@ -19,7 +21,20 @@ export default function Page() {
       headers: {
         'Content-Type': 'text/html',
       },
-      body: prompt,
+      body: prompt
+    })
+    setUrl(await res.json())
+    refresh()
+  }
+
+  async function updateWithImage(prompt, image, refresh) {
+    const data = {prompt: prompt, image: image}
+    const res = await fetch('/api/DalleImageUpload', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(data)
     })
     setUrl(await res.json())
     refresh()
@@ -28,6 +43,14 @@ export default function Page() {
   async function handleSubmit(e) {
     e.preventDefault()
     update(prompt, router.refresh)
+  }
+
+  async function handleUploadedImage(e) {
+    e.preventDefault()
+    console.log('handleUploadedImage')
+    console.log('image is: ', localStorage.getItem('image'))
+    const image = localStorage.getItem('image')
+    updateWithImage(prompt, image, router.refresh)
   }
 
   function handleReset(e) {
@@ -53,9 +76,11 @@ export default function Page() {
           rows="8" cols="75" />
         <br />
 
-        <button onClick={handleSubmit}>Create Image</button>
+        <button onClick={handleSubmit}>Create New Image</button>
+        <button onClick={handleUploadedImage}>Create With Uploaded Image</button>
         <button onClick={handleReset}>Reset</button>
       </form>
+      <ImageUpload />
     </div>
   )
 }
