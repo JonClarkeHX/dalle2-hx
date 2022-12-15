@@ -1,25 +1,22 @@
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-} from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage } from "./firebase"
 import { useState } from "react"
 
-export default function ImageUpload() {
+export default function ImageUpload({ setNewUploadImageURL }) {
   const [imageUpload, setImageUpload] = useState(null)
-  const [imageURLs, setImageURLs] = useState([])
   const [showInput, setShowInput] = useState(true)
 
   function handleUpload() {
-    console.log('handleUpload')
     const imageRef = ref(storage, 'images/' + imageUpload.name)
-    uploadBytes(imageRef, imageUpload).then((snapshot) => {
-      getDownloadURL(snapshot, ref).then((url) => {
-        setImageURLs([...imageURLs, url])
+    uploadBytes(imageRef, imageUpload).then(() => {
+      getDownloadURL(imageRef).then((url) => {
+        setNewUploadImageURL(url)
+      }).catch((error) => {
+        console.log('getDownloadURL error is: ', error)
       })
+    }).catch((error) => {
+      console.log('uploadBytes error is: ', error)
     })
-    console.log('image uploaded', imageUpload)
     setShowInput(false)
   }
 
@@ -37,7 +34,6 @@ export default function ImageUpload() {
         :
         <>
           <span>Image uploaded</span>
-          <button disabled>Thank you</button>
         </>
         }
     </div>

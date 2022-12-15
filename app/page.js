@@ -4,14 +4,14 @@ import { useState } from "react"
 import { useRouter } from 'next/navigation'
 import ImageContainer from "./imageContainer"
 import ImageUpload from "./imageUpload"
-import styles from './styles.module.css';
-import local from "@next/font/local"
+import styles from './styles.module.css'
 
 export default function Page() {
   const [header, setHeader] = useState("Secure parking that's very close to the airport.")
   const [content, setContent] = useState("It's all eyes on your car when you park in a secured car park with CCTV.")
   const [prompt, setPrompt] = useState('Red car surrounded by CCTV cameras, there are lots of CCTV cameras')
   const [url, setUrl] = useState("/sean-oulashin-KMn4VEeEPR8-unsplash.jpg")
+  const [uploadImageUrl, setUploadImageUrl] = useState('')
 
   const router = useRouter()
 
@@ -60,6 +60,11 @@ export default function Page() {
     setPrompt('')
   }
 
+  function setNewUploadImageURL(url) {
+    console.log('setNewUploadImageURL fired, url is: ', url)
+    setUploadImageUrl(url)
+  }
+
   return (
     <div>
       <ImageContainer header={header} content={content} url={url} />
@@ -80,7 +85,8 @@ export default function Page() {
         <button onClick={handleUploadedImage}>Create With Uploaded Image</button>
         <button onClick={handleReset}>Reset</button>
       </form>
-      <ImageUpload />
+      <ImageUpload setNewUploadImageURL={setNewUploadImageURL} />
+      <p>Upload image url: {uploadImageUrl}</p>
     </div>
   )
 }
