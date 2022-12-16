@@ -11,7 +11,8 @@ export default function Page() {
   const [content, setContent] = useState("It's all eyes on your car when you park in a secured car park with CCTV.")
   const [prompt, setPrompt] = useState('Red car surrounded by CCTV cameras, there are lots of CCTV cameras')
   const [url, setUrl] = useState("/sean-oulashin-KMn4VEeEPR8-unsplash.jpg")
-  const [uploadImageUrl, setUploadImageUrl] = useState('')
+  const [uploadImageUrl, setUploadImageUrl] = useState('default-image')
+  const [uploadMaskUrl, setUploadMaskUrl] = useState('default-mask')
 
   const router = useRouter()
 
@@ -27,8 +28,8 @@ export default function Page() {
     refresh()
   }
 
-  async function updateWithImage(prompt, image, refresh) {
-    const data = {prompt: prompt, image: image}
+  async function updateWithImage(prompt, image, mask, refresh) {
+    const data = {prompt: prompt, image: image, mask: mask}
     const res = await fetch('/api/DalleImageUpload', {
       method: 'POST',
       headers: {
@@ -47,10 +48,9 @@ export default function Page() {
 
   async function handleUploadedImage(e) {
     e.preventDefault()
-    console.log('handleUploadedImage')
-    console.log('image is: ', localStorage.getItem('image'))
-    const image = localStorage.getItem('image')
-    updateWithImage(prompt, image, router.refresh)
+    const image = uploadImageUrl
+    const mask = uploadMaskUrl
+    updateWithImage(prompt, image, mask, router.refresh)
   }
 
   function handleReset(e) {
@@ -61,8 +61,11 @@ export default function Page() {
   }
 
   function setNewUploadImageURL(url) {
-    console.log('setNewUploadImageURL fired, url is: ', url)
     setUploadImageUrl(url)
+  }
+
+  function setNewUploadMaskURL(url) {
+    setUploadMaskUrl(url)
   }
 
   return (
@@ -82,11 +85,12 @@ export default function Page() {
         <br />
 
         <button onClick={handleSubmit}>Create New Image</button>
-        <button onClick={handleUploadedImage}>Create With Uploaded Image</button>
+        <button onClick={handleUploadedImage}>Create New Image With Mask</button>
         <button onClick={handleReset}>Reset</button>
       </form>
-      <ImageUpload setNewUploadImageURL={setNewUploadImageURL} />
+      <ImageUpload setNewUploadImageURL={setNewUploadImageURL} setNewUploadMaskURL={setNewUploadMaskURL} />
       <p>Upload image url: {uploadImageUrl}</p>
+      <p>Upload mask url: {uploadMaskUrl}</p>
     </div>
   )
 }
